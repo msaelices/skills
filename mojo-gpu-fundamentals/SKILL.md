@@ -25,7 +25,7 @@ Mojo GPU programming has **no CUDA syntax**. No `__global__`, `__device__`,
 | CUDA / What you'd guess                 | Mojo GPU                                                                             |
 |-----------------------------------------|--------------------------------------------------------------------------------------|
 | `__global__ void kernel(...)`           | Plain `def kernel(...)` — no decorator                                               |
-| `kernel<<<grid, block>>>(args)`         | `ctx.enqueue_function[kernel, kernel](args, grid_dim=..., block_dim=...)`            |
+| `kernel<<<grid, block>>>(args)`         | `ctx.enqueue_function[kernel](args, grid_dim=..., block_dim=...)`                    |
 | `cudaMalloc(&ptr, size)`                | `ctx.enqueue_create_buffer[dtype](count)`                                            |
 | `cudaMemcpy(dst, src, ...)`             | `ctx.enqueue_copy(dst_buf, src_buf)` or `ctx.enqueue_copy(dst_buf=..., src_buf=...)` |
 | `cudaDeviceSynchronize()`               | `ctx.synchronize()`                                                                  |
@@ -227,11 +227,8 @@ ctx.synchronize()
 
 ## Kernel launch
 
-**Critical**: `enqueue_function` takes the kernel function **twice** as
-compile-time parameters:
-
 ```mojo
-ctx.enqueue_function[my_kernel, my_kernel](
+ctx.enqueue_function[my_kernel](
     input_tensor,
     output_tensor,
     size,                    # scalar args passed directly
@@ -240,7 +237,7 @@ ctx.enqueue_function[my_kernel, my_kernel](
 )
 
 # 2D grid/block — use tuples:
-ctx.enqueue_function[kernel_2d, kernel_2d](
+ctx.enqueue_function[kernel_2d](
     args...,
     grid_dim=(col_blocks, row_blocks),
     block_dim=(BLOCK_SIZE, BLOCK_SIZE),
@@ -253,11 +250,11 @@ of "no matching method" / "DevicePassable" template errors:
 
 ```mojo
 # WRONG — vector_add has a `LT: TensorLayout` parameter
-ctx.enqueue_function[vector_add, vector_add](a, b, c, N, grid_dim=G, block_dim=B)
+ctx.enqueue_function[vector_add](a, b, c, N, grid_dim=G, block_dim=B)
 
 # CORRECT — bind parameters, then launch the bound symbol
 comptime kernel = vector_add[type_of(layout)]
-ctx.enqueue_function[kernel, kernel](a, b, c, N, grid_dim=G, block_dim=B)
+ctx.enqueue_function[kernel](a, b, c, N, grid_dim=G, block_dim=B)
 ```
 
 Monomorphic kernels (signature uses `type_of(layout)` directly, no
@@ -443,7 +440,7 @@ def main() raises:
     var b = TileTensor(b_buf, layout)
     var c = TileTensor(c_buf, layout)
 
-    ctx.enqueue_function[add_kernel, add_kernel](
+    ctx.enqueue_function[add_kernel](
         a, b, c, N,
         grid_dim=ceildiv(N, BLOCK),
         block_dim=BLOCK,
@@ -515,7 +512,7 @@ def main() raises:
     var ctx = DeviceContext()
     # ... allocate buffers, init data, then:
     comptime kernel = matmul_kernel[type_of(a_layout), type_of(b_layout), type_of(c_layout)]
-    ctx.enqueue_function[kernel, kernel](
+    ctx.enqueue_function[kernel](
         A, B, C,
         grid_dim=(ceildiv(N, TILE), ceildiv(M, TILE)),
         block_dim=(TILE, TILE),
@@ -578,7 +575,7 @@ from std.benchmark import Bench, BenchConfig, Bencher, BenchId, BenchMetric, Thr
 def bench_fn(mut b: Bencher) raises:
     @always_inline                         # inner: unified closure, passed by value
     def launch(ctx: DeviceContext) raises:
-        ctx.enqueue_function[kernel, kernel](args, grid_dim=G, block_dim=B)
+        ctx.enqueue_function[kernel](args, grid_dim=G, block_dim=B)
     b.iter_custom(launch, ctx)             # value-taking overload — NOT `[launch]`
 
 var bench = Bench(BenchConfig(max_iters=50000))
