@@ -188,6 +188,7 @@ against" column is where the agent must look to confirm or refute the claim.
 | "Equivalent to Python's X" with `k > n` etc. | CPython's actual behavior + the implementation |
 | Args section reflects positional/keyword constraints | The signature (`/`, `*`) |
 | `@no_inline` annotation on `write_repr_to` | Sibling `write_repr_to` implementations in `std/benchmark/bencher.mojo` etc. |
+| Verbose / redundant docstring or inline comment | The implementation -- flag docstrings that restate the signature, multi-paragraph summaries, or comments explaining WHAT (instead of WHY) when the code is self-evident. Stdlib style is one-line summaries plus Args/Returns/Raises only when non-obvious; inline comments only when the WHY isn't visible in the code. |
 
 #### E. Tests (sources: existing tests, the implementation)
 
@@ -472,7 +473,10 @@ Ask the user via `AskUserQuestion`:
 **Next steps** (header: "Next steps"):
 
 - **Fix locally** (default for local-mode runs): Read each `.specs/stdlib-review-<PR>.md` and
-  apply fixes on the local branch.
+  apply fixes on the local branch. When the fix involves writing or rewriting a docstring or
+  inline comment, keep it concise: a one-line summary plus Args/Returns/Raises sections only when
+  non-obvious, and inline comments only when the WHY isn't self-evident from the code. Do not
+  restate the signature, narrate the implementation, or add multi-paragraph prose.
 - **Done**: Reviews are in place, nothing more needed.
 - **Re-review**: Run another pass on specific PRs (e.g. after the author pushes fixes).
 - **Update `mojo-stdlib-contributing`**: If a recurring pattern surfaced that isn't in the
