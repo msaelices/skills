@@ -39,13 +39,9 @@ Each phase links to references with the details. Read the reference for the
 activity you're on, not all of them upfront.
 
 **Environment:** run **every** command through the pixi env that has MAX
-installed (`pixi run python …`, `pixi run max serve …`). Do not use bare
-`python` or `max` on the shell PATH, and do not `pip install modular` —
-that installs the Mojo language package, not MAX.
-See [MAX get started](https://docs.modular.com/max/get-started).
-
-Helper scripts live in this skill's `scripts/` directory (copy or vendor
-them into your repo). From the skill root (where `pixi.toml` lives):
+installed (`pixi run python …`, `pixi run max serve …`), from the skill
+root where `pixi.toml` lives (do not use bare `python` or `max` on the
+shell PATH):
 
 ```bash
 cd <path-to-skill>
@@ -54,8 +50,9 @@ pixi run python scripts/inspect_hf.py <HF_MODEL_ID>
 # Or: pixi run test-scripts   # smoke-test all scripts (no GPU)
 ```
 
-All helpers are also reachable through a unified dispatcher with the same
-argument names and exit codes:
+Helper scripts live in this skill's `scripts/` directory (copy or vendor
+them into your repo). All helpers are also reachable through a unified
+dispatcher with the same argument names and exit codes:
 
 ```bash
 pixi run python scripts/import_model.py inspect <HF_MODEL_ID>
