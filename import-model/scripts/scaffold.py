@@ -161,7 +161,7 @@ def render_arch(*, slug: str, arch_name: str, short: str, hf_id: str) -> str:
 
 from max.graph.weights import WeightsFormat
 from max.interfaces import PipelineTask
-from max.pipelines.core import TextContext
+from max.pipelines.context import TextContext
 from max.pipelines.lib import SupportedArchitecture, TextTokenizer
 
 from . import weight_adapters
