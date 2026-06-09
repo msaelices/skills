@@ -92,6 +92,17 @@ hot loops, struct layout, view-vs-owned types, lazy-initialized global caches,
 hash-keyed caching, `comptime` specialization, nibble-based SIMD byte scanning,
 prefiltering strategies, and fast-path dispatch.
 
+### `import-model`
+
+[This skill](import-model/SKILL.md) walks an AI agent through importing a
+new model architecture into MAX, starting from a Hugging Face model ID. It's
+triggered when you ask your agent to import a model into MAX, add a model to
+MAX, or bring up a Hugging Face model in MAX. The skill drives a three-phase
+workflow — decide and plan, implement, verify — that scaffolds from a similar
+registered MAX architecture, implements every divergent layer against the
+Hugging Face reference, and verifies outputs match before declaring the
+import done.
+
 ## Examples
 
 Once these skills are installed, you can use them for many common tasks.
