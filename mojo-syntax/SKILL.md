@@ -532,10 +532,10 @@ vectorize[simd_width](size, closure)              # runtime-arg overload
 
 ```text
 AnyType
-  ImplicitlyDestructible          — auto __del__; most types
-  Movable                         — __init__(out self, *, deinit take: Self)
+  ImplicitlyDeletable             — auto __del__; most types
+  Movable                         — __init__(out self, *, deinit move: Self)
     Copyable                      — __init__(out self, *, copy: Self)
-      ImplicitlyCopyable(Copyable, ImplicitlyDestructible)
+      ImplicitlyCopyable(Copyable, take)
     RegisterPassable(Movable)
-      TrivialRegisterPassable(ImplicitlyCopyable, ImplicitlyDestructible, Movable, RegisterPassable)
+      TrivialRegisterPassable(ImplicitlyCopyable, take, Movable, RegisterPassable)
 ```
