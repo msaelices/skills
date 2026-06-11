@@ -82,6 +82,17 @@ triggered when Python types are used Mojo or a Python module needs to interact
 with Mojo code. Many capabilities of Mojo - Python interoperability are fairly
 new, and existing coding agents don't handle them correctly without guidance.
 
+### `import-model`
+
+[This skill](import-model/SKILL.md) walks an AI agent through importing a
+new model architecture into MAX, starting from a Hugging Face model ID. It's
+triggered when you ask your agent to import a model into MAX, add a model to
+MAX, or bring up a Hugging Face model in MAX. The skill drives a three-phase
+workflow — decide and plan, implement, verify — that scaffolds from a similar
+registered MAX architecture, implements every divergent layer against the
+Hugging Face reference, and verifies outputs match before declaring the
+import done.
+
 ### `mojo-optimizations`
 
 [This skill](mojo-optimizations/SKILL.md) captures performance optimization
@@ -112,6 +123,7 @@ file for the author to fix before flipping a draft PR to ready-for-review.
 Pass `"in post mode"` in the arguments to post review comments on the PR via
 `gh pr review` instead. Use when you want a thorough self-review pass on a
 stdlib contribution, or to fact-check someone else's stdlib PR.
+
 
 ## Examples
 
